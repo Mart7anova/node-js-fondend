@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 
 type UsersType = Array<{
-    id: string
+    _id: string
     name: string
 }>
 
@@ -25,8 +25,13 @@ function App() {
     }, [])
 
     const crateUser = (name: string) => {
-      axios.post('http://localhost:7542/users', {name})
+      axios.post(`http://localhost:7542/users`, {name})
           .then(() =>  getUsers())
+    }
+
+    const removeUser = (id: string) => {
+        axios.delete(`http://localhost:7542/users/${id}`)
+            .then(() =>  getUsers())
     }
 
     return (
@@ -40,7 +45,10 @@ function App() {
             <button onClick={()=>crateUser(name)}>Create user</button>
 
             {
-                users.map(user => <div key={user.id}>{user.name}</div>)
+                users.map(user => <div key={user._id}>
+                    <span>{user.name} </span>
+                    <button onClick={()=>removeUser(user._id)}>X</button>
+                </div>)
             }
         </div>
     );
